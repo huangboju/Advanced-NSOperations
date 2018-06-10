@@ -10,6 +10,7 @@ Shows how to retrieve the user's location with an operation.
 
 import Foundation
 import CoreLocation
+import PSOperations
 
 /**
  `LocationOperation` is an `Operation` subclass to do a "one-shot" request to
@@ -17,7 +18,7 @@ import CoreLocation
  prompt for `WhenInUse` location authorization, if the app does not already
  have it.
  */
-open class LocationOperation: Operation, CLLocationManagerDelegate {
+open class LocationOperation: PSOperation, CLLocationManagerDelegate {
     // MARK: Properties
     
     fileprivate let accuracy: CLLocationAccuracy

@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FD854FE11D2D8CC100162079"
-               BuildableName = "PSOperationsPassbook.framework"
-               BlueprintName = "PSOperationsPassbook"
+               BlueprintIdentifier = "775C7EF1205718C30091A21F"
+               BuildableName = "PSOperationsCalendar.framework"
+               BlueprintName = "PSOperationsCalendar"
                ReferencedContainer = "container:PSOperations.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FD854FE11D2D8CC100162079"
-            BuildableName = "PSOperationsPassbook.framework"
-            BlueprintName = "PSOperationsPassbook"
+            BlueprintIdentifier = "775C7EF1205718C30091A21F"
+            BuildableName = "PSOperationsCalendar.framework"
+            BlueprintName = "PSOperationsCalendar"
             ReferencedContainer = "container:PSOperations.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FD854FE11D2D8CC100162079"
-            BuildableName = "PSOperationsPassbook.framework"
-            BlueprintName = "PSOperationsPassbook"
+            BlueprintIdentifier = "775C7EF1205718C30091A21F"
+            BuildableName = "PSOperationsCalendar.framework"
+            BlueprintName = "PSOperationsCalendar"
             ReferencedContainer = "container:PSOperations.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

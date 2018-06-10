@@ -30,20 +30,20 @@ open class Operation: Foundation.Operation {
     }
     
     // use the KVO mechanism to indicate that changes to "state" affect other properties as well
-    class func keyPathsForValuesAffectingIsReady() -> Set<String> {
-        return ["state"]
+    @objc class func keyPathsForValuesAffectingIsReady() -> Set<NSObject> {
+        return ["state" as NSObject]
     }
     
-    class func keyPathsForValuesAffectingIsExecuting() -> Set<String> {
-        return ["state"]
+    @objc class func keyPathsForValuesAffectingIsExecuting() -> Set<NSObject> {
+        return ["state" as NSObject]
     }
     
-    class func keyPathsForValuesAffectingIsFinished() -> Set<String> {
-        return ["state"]
+    @objc class func keyPathsForValuesAffectingIsFinished() -> Set<NSObject> {
+        return ["state" as NSObject]
     }
     
-    class func keyPathsForValuesAffectingIsCancelled() -> Set<String> {
-        return ["cancelledState"]
+    @objc class func keyPathsForValuesAffectingIsCancelled() -> Set<NSObject> {
+        return ["cancelledState" as NSObject]
     }
     
     private var instanceContext = 0
@@ -61,29 +61,31 @@ open class Operation: Foundation.Operation {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             return
         }
-        
+        stateAccess.lock()
+        defer { stateAccess.unlock() }
         guard super.isReady && !isCancelled && state == .pending else { return }
         evaluateConditions()
     }
-
+    
     /**
         Indicates that the Operation can now begin to evaluate readiness conditions,
         if appropriate.
     */
     func didEnqueue() {
+        stateAccess.lock()
+        defer { stateAccess.unlock() }
         state = .pending
     }
     
+    private let stateAccess = NSRecursiveLock()
     /// Private storage for the `state` property that will be KVO observed.
     private var _state = State.initialized
     private let stateQueue = DispatchQueue(label: "Operations.Operation.state")
     fileprivate var state: State {
         get {
-            var currentState = State.initialized
-            stateQueue.sync {
-                currentState = _state
+            return stateQueue.sync {
+                return _state
             }
-            return currentState
         }
         set {
             /*
@@ -97,7 +99,7 @@ open class Operation: Foundation.Operation {
             willChangeValue(forKey: "state")
             stateQueue.sync {
                 guard _state != .finished else { return }
-                assert(_state.canTransitionToState(newValue, operationIsCancelled: isCancelled), "Performing invalid state transition.")
+                assert(_state.canTransitionToState(newValue, operationIsCancelled: isCancelled), "Performing invalid state transition. from: \(_state) to: \(newValue)")
                 _state = newValue
             }
             didChangeValue(forKey: "state")
@@ -106,6 +108,8 @@ open class Operation: Foundation.Operation {
     
     // Here is where we extend our definition of "readiness".
     override open var isReady: Bool {
+        stateAccess.lock()
+        defer { stateAccess.unlock() }
         
         guard super.isReady else { return false }
         
@@ -124,6 +128,9 @@ open class Operation: Foundation.Operation {
             return qualityOfService == .userInitiated
         }
         set {
+            stateAccess.lock()
+            defer { stateAccess.unlock() }
+            
             assert(state < .executing, "Cannot modify userInitiated after execution has begun.")
             qualityOfService = newValue ? .userInitiated : .default
         }
@@ -148,6 +155,9 @@ open class Operation: Foundation.Operation {
             return currentState
         }
         set {
+            stateAccess.lock()
+            defer { stateAccess.unlock() }
+            
             guard _cancelled != newValue else { return }
             
             willChangeValue(forKey: "cancelledState")
@@ -174,6 +184,9 @@ open class Operation: Foundation.Operation {
     }
     
     fileprivate func evaluateConditions() {
+        stateAccess.lock()
+        defer { stateAccess.unlock() }
+        
         assert(state == .pending && !isCancelled, "evaluateConditions() was called out-of-order")
             
         guard conditions.count > 0 else {
@@ -184,6 +197,9 @@ open class Operation: Foundation.Operation {
         state = .evaluatingConditions
         
         OperationConditionEvaluator.evaluate(conditions, operation: self) { failures in
+            self.stateAccess.lock()
+            defer { self.stateAccess.unlock() }
+            
             if !failures.isEmpty {
                 self.cancelWithErrors(failures)
             }
@@ -214,11 +230,14 @@ open class Operation: Foundation.Operation {
     }
     
     // MARK: Execution and Cancellation
-   override final public func main() {
+    override final public func main() {
+        stateAccess.lock()
+
         assert(state == .ready, "This operation must be performed on an operation queue.")
         
-        if _internalErrors.isEmpty && !isCancelled {
+        if internalErrors.isEmpty && !isCancelled {
             state = .executing
+            stateAccess.unlock()
             
             for observer in observers {
                 observer.operationDidStart(self)
@@ -227,6 +246,7 @@ open class Operation: Foundation.Operation {
             execute()
         } else {
             finish()
+            stateAccess.unlock()
         }
     }
     
@@ -246,13 +266,28 @@ open class Operation: Foundation.Operation {
         finish()
     }
     
-    fileprivate var _internalErrors: [NSError] = []
+    private let errorQueue = DispatchQueue(label: "Operations.Operation.internalErrors")
+    private var _internalErrors: [NSError] = []
+    fileprivate var internalErrors: [NSError] {
+        get {
+            return errorQueue.sync {
+                return _internalErrors
+            }
+        }
+        set {
+            errorQueue.sync {
+                _internalErrors = newValue
+            }
+        }
+    }
     
     open var errors : [NSError] {
-        return _internalErrors
+        return internalErrors
     }
   
     override open func cancel() {
+        stateAccess.lock()
+        defer { stateAccess.unlock() }
         guard !isFinished else { return }
         
         _cancelled = true
@@ -263,7 +298,7 @@ open class Operation: Foundation.Operation {
     }
     
     open func cancelWithErrors(_ errors: [NSError]) {
-        _internalErrors += errors
+        internalErrors += errors
         cancel()
     }
     
@@ -301,20 +336,22 @@ open class Operation: Foundation.Operation {
     */
     fileprivate var hasFinishedAlready = false
     public final func finish(_ errors: [NSError] = []) {
-        if !hasFinishedAlready {
-            hasFinishedAlready = true
-            state = .finishing
-            
-            _internalErrors += errors
-          
-            finished(_internalErrors)
-            
-            for observer in observers {
-                observer.operationDidFinish(self, errors: _internalErrors)
-            }
-            
-            state = .finished
+        stateAccess.lock()
+        defer { stateAccess.unlock() }
+        guard !hasFinishedAlready else { return }
+        
+        hasFinishedAlready = true
+        state = .finishing
+        
+        internalErrors += errors
+        
+        finished(internalErrors)
+        
+        for observer in observers {
+            observer.operationDidFinish(self, errors: internalErrors)
         }
+        
+        state = .finished
     }
     
     /**
