@@ -16,9 +16,9 @@ public struct iCloudContainer: CapabilityType {
     public static let name = "iCloudContainer"
     
     fileprivate let container: CKContainer
-    fileprivate let permissions: CKApplicationPermissions
+    fileprivate let permissions: CKContainer_Application_Permissions
     
-    public init(container: CKContainer, permissions: CKApplicationPermissions = []) {
+    public init(container: CKContainer, permissions: CKContainer_Application_Permissions = []) {
         self.container = container
         self.permissions = permissions
     }
@@ -33,7 +33,7 @@ public struct iCloudContainer: CapabilityType {
     
 }
 
-private func verifyAccountStatus(_ container: CKContainer, permission: CKApplicationPermissions, shouldRequest: Bool, completion: @escaping (CapabilityStatus) -> Void) {
+private func verifyAccountStatus(_ container: CKContainer, permission: CKContainer_Application_Permissions, shouldRequest: Bool, completion: @escaping (CapabilityStatus) -> Void) {
     container.accountStatus { accountStatus, accountError in
         switch accountStatus {
             case .noAccount: completion(.notAvailable)
@@ -47,11 +47,13 @@ private func verifyAccountStatus(_ container: CKContainer, permission: CKApplica
                 } else {
                     completion(.authorized)
                 }
+        @unknown default:
+            fatalError()
         }
     }
 }
 
-private func verifyPermission(_ container: CKContainer, permission: CKApplicationPermissions, shouldRequest: Bool, completion: @escaping (CapabilityStatus) -> Void) {
+private func verifyPermission(_ container: CKContainer, permission: CKContainer_Application_Permissions, shouldRequest: Bool, completion: @escaping (CapabilityStatus) -> Void) {
     container.status(forApplicationPermission: permission) { permissionStatus, permissionError in
         switch permissionStatus {
             case .initialState:
@@ -65,11 +67,13 @@ private func verifyPermission(_ container: CKContainer, permission: CKApplicatio
             case .couldNotComplete:
                 let error = permissionError ?? NSError(domain: CKErrorDomain, code: CKError.permissionFailure.rawValue, userInfo: nil)
                 completion(.error(error as NSError))
+        @unknown default:
+            fatalError()
         }
     }
 }
 
-private func requestPermission(_ container: CKContainer, permission: CKApplicationPermissions, completion: @escaping (CapabilityStatus) -> Void) {
+private func requestPermission(_ container: CKContainer, permission: CKContainer_Application_Permissions, completion: @escaping (CapabilityStatus) -> Void) {
     DispatchQueue.main.async {
         container.requestApplicationPermission(permission) { requestStatus, requestError in
             switch requestStatus {
@@ -79,6 +83,8 @@ private func requestPermission(_ container: CKContainer, permission: CKApplicati
                 case .couldNotComplete:
                     let error = requestError ?? NSError(domain: CKErrorDomain, code: CKError.permissionFailure.rawValue, userInfo: nil)
                     completion(.error(error as NSError))
+            @unknown default:
+                fatalError()
             }
         }
     }
