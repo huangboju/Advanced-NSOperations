@@ -24,6 +24,7 @@ class CustomBlockOperation: CustomOperation {
             will never finish executing. If this parameter is `nil`, the operation
             will immediately finish.
     */
+    @objc
     init(block: OperationBlock? = nil) {
         self.block = block
         super.init()
