@@ -1,6 +1,6 @@
 # PSOperations
 
-[![codebeat badge](https://codebeat.co/badges/5a8fa0e4-178b-499b-9947-98bf69013b7f)](https://codebeat.co/projects/github-com-pluralsight-psoperations) [![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=5907e956138a4e0001f3fbaf&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/5907e956138a4e0001f3fbaf/build/latest?branch=master)
+[![codebeat badge](https://codebeat.co/badges/5a8fa0e4-178b-499b-9947-98bf69013b7f)](https://codebeat.co/projects/github-com-pluralsight-psoperations) [![Build Status](https://app.bitrise.io/app/e1a3e3a8d5e6ef42/status.svg?token=4Mixz35ECEfGcWB8vCPpig)](https://app.bitrise.io/app/e1a3e3a8d5e6ef42)
 
 PSOperations is a framework that leverages the power of NSOperation and NSOperationQueue. It enables you to use operations more easily in all parts of your project.
 
@@ -10,11 +10,11 @@ This is an adaptation of the sample code provided in the [Advanced NSOperations]
 
 ## Support
 
- - Swift 4.x
+ - Swift 5.x
  - iOS 8.0
  - tvOS 9.0
  - watchOS (undefined deployment target)
- - macOS (undefined deployment target)
+ - macOS 10.11
  - Extension friendly
  - Tests only run against iOS 9 (latest) and tvOS 9 (latest)
 
@@ -31,6 +31,16 @@ public typealias PSBlockOperation = BlockOperation
 
 ## Installation
 PSOperations supports multiple methods for installing the library in a project.
+
+### Swift Package Manager
+
+The [Swift Package Manager](https://swift.org/package-manager) (SPM) is Swift's own dependency management as of Swift 3.0. Xcode 11 gained native support for SPM and allows to add dependencies to apps from within Xcode.
+
+PSOperations can be added either via Xcode 11+, or by adding the following dependency to your Package.swift:
+
+```swift
+.package(url: "https://github.com/pluralsight/PSOperations.git", from: "5.0.2"),
+```
 
 ### CocoaPods
 [CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like PSOperations in your projects.

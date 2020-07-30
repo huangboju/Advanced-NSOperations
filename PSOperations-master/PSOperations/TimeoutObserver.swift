@@ -15,18 +15,16 @@ import Foundation
 public class TimeoutObserver: OperationObserver {
     // MARK: Properties
 
-    static let timeoutKey = "Timeout"
-    
-    fileprivate let timeout: TimeInterval
-    
+    private let timeout: TimeInterval
+
     // MARK: Initialization
-    
+
     public init(timeout: TimeInterval) {
         self.timeout = timeout
     }
-    
+
     // MARK: OperationObserver
-    
+
     public func operationDidStart(_ operation: Operation) {
         // When the operation starts, queue up a block to cause it to time out.
         let when = DispatchTime.now() + timeout
@@ -37,15 +35,11 @@ public class TimeoutObserver: OperationObserver {
                 been cancelled.
             */
             if !operation.isFinished && !operation.isCancelled {
-                let error = NSError(code: .executionFailed, userInfo: [
-                    type(of: self).timeoutKey: self.timeout
-                ])
-
-                operation.cancelWithError(error)
+                operation.cancelWithError(TimeoutError(timeout: self.timeout))
             }
         }
     }
-    
+
     public func operationDidCancel(_ operation: Operation) {
         // No op.
     }
@@ -54,7 +48,17 @@ public class TimeoutObserver: OperationObserver {
         // No op.
     }
 
-    public func operationDidFinish(_ operation: Operation, errors: [NSError]) {
+    public func operationDidFinish(_ operation: Operation, errors: [Error]) {
         // No op.
+    }
+}
+
+public extension TimeoutObserver {
+    struct TimeoutError: Error, Equatable {
+        public let timeout: TimeInterval
+        
+        fileprivate init(timeout: TimeInterval) {
+            self.timeout = timeout
+        }
     }
 }
