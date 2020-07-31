@@ -32,12 +32,12 @@ struct NegatedCondition<T: OperationCondition>: OperationCondition {
         self.condition = condition
     }
     
-    func dependencyForOperation(_ operation: CustomOperation) -> Operation? {
-        return condition.dependencyForOperation(operation)
+    func dependency(for operation: CustomOperation) -> Operation? {
+        return condition.dependency(for: operation)
     }
     
-    func evaluateForOperation(_ operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
-        condition.evaluateForOperation(operation) { result in
+    func evaluate(for operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
+        condition.evaluate(for: operation) { result in
             if result == .satisfied {
                 // If the composed condition succeeded, then this one failed.
                 let error = NSError(code: .conditionFailed, userInfo: [

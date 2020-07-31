@@ -22,11 +22,11 @@ struct NoCancelledDependencies: OperationCondition {
         // No op.
     }
     
-    func dependencyForOperation(_ operation: CustomOperation) -> Operation? {
+    func dependency(for operation: CustomOperation) -> Operation? {
         return nil
     }
     
-    func evaluateForOperation(_ operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
+    func evaluate(for operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
         // Verify that all of the dependencies executed.
         let cancelled = operation.dependencies.filter { $0.isCancelled }
 

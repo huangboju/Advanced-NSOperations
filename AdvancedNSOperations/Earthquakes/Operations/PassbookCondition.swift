@@ -18,7 +18,7 @@ struct PassbookCondition: OperationCondition {
     
     init() { }
     
-    func dependencyForOperation(_ operation: CustomOperation) -> Operation? {
+    func dependency(for operation: CustomOperation) -> Operation? {
         /*
             There's nothing you can do to make Passbook available if it's not
             on your device.
@@ -26,7 +26,7 @@ struct PassbookCondition: OperationCondition {
         return nil
     }
     
-    func evaluateForOperation(_ operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
+    func evaluate(for operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
         if PKPassLibrary.isPassLibraryAvailable() {
             completion(.satisfied)
         }

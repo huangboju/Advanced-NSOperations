@@ -29,12 +29,12 @@ struct SilentCondition<T: OperationCondition>: OperationCondition {
         self.condition = condition
     }
     
-    func dependencyForOperation(_ operation: CustomOperation) -> Operation? {
+    func dependency(for operation: CustomOperation) -> Operation? {
         // Returning nil means we will never a dependency to be generated.
         return nil
     }
     
-    func evaluateForOperation(_ operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
-        condition.evaluateForOperation(operation, completion: completion)
+    func evaluate(for operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
+        condition.evaluate(for: operation, completion: completion)
     }
 }

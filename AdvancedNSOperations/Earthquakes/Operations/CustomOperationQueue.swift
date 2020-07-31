@@ -52,7 +52,7 @@ class CustomOperationQueue: OperationQueue {
             
             // Extract any dependencies needed by this operation.
             let dependencies = op.conditions.compactMap {
-                $0.dependencyForOperation(op)
+                $0.dependency(for: op)
             }
                 
             for dependency in dependencies {

@@ -41,11 +41,11 @@ struct RemoteNotificationCondition: OperationCondition {
         self.application = application
     }
     
-    func dependencyForOperation(_ operation: CustomOperation) -> Operation? {
+    func dependency(for operation: CustomOperation) -> Operation? {
         return RemoteNotificationPermissionOperation(application: application, handler: { _ in })
     }
     
-    func evaluateForOperation(_ operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
+    func evaluate(for operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
         /*
             Since evaluation requires executing an operation, use a private operation
             queue.

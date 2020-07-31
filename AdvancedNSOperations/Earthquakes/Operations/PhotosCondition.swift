@@ -18,11 +18,11 @@ struct PhotosCondition: OperationCondition {
     
     init() { }
     
-    func dependencyForOperation(_ operation: CustomOperation) -> Operation? {
+    func dependency(for operation: CustomOperation) -> Operation? {
         return PhotosPermissionOperation()
     }
     
-    func evaluateForOperation(_ operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
+    func evaluate(for operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
         switch PHPhotoLibrary.authorizationStatus() {
             case .authorized:
                 completion(.satisfied)

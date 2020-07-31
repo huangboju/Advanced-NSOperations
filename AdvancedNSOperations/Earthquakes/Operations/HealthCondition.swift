@@ -38,7 +38,7 @@ struct HealthCondition: OperationCondition {
         readTypes = typesToRead
     }
     
-    func dependencyForOperation(_ operation: CustomOperation) -> Operation? {
+    func dependency(for operation: CustomOperation) -> Operation? {
         guard HKHealthStore.isHealthDataAvailable() else {
             return nil
         }
@@ -50,7 +50,7 @@ struct HealthCondition: OperationCondition {
         return HealthPermissionOperation(shareTypes: shareTypes, readTypes: readTypes)
     }
     
-    func evaluateForOperation(_ operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
+    func evaluate(for operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
         guard HKHealthStore.isHealthDataAvailable() else {
             failed(shareTypes, completion: completion)
             return

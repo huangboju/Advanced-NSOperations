@@ -36,11 +36,11 @@ struct CloudContainerCondition: OperationCondition {
         self.permission = permission
     }
     
-    func dependencyForOperation(_ operation: CustomOperation) -> Operation? {
+    func dependency(for operation: CustomOperation) -> Operation? {
         return CloudKitPermissionOperation(container: container, permission: permission)
     }
     
-    func evaluateForOperation(_ operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
+    func evaluate(for operation: CustomOperation, completion: @escaping (OperationConditionResult) -> Void) {
         container.verifyPermission(permission, requestingIfNecessary: false) { error in
             if let error = error {
                 let conditionError = NSError(code: .conditionFailed, userInfo: [
