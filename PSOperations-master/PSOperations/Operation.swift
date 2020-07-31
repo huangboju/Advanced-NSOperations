@@ -32,20 +32,20 @@ open class Operation: Foundation.Operation {
     }
 
     // use the KVO mechanism to indicate that changes to "state" affect other properties as well
-    @objc class func keyPathsForValuesAffectingIsReady() -> Set<NSObject> {
-        return ["state" as NSObject]
+    @objc class var keyPathsForValuesAffectingIsReady: Set<String> {
+        return ["state"]
     }
 
-    @objc class func keyPathsForValuesAffectingIsExecuting() -> Set<NSObject> {
-        return ["state" as NSObject]
+    @objc class var keyPathsForValuesAffectingIsExecuting:Set<String> {
+        return ["state"]
     }
 
-    @objc class func keyPathsForValuesAffectingIsFinished() -> Set<NSObject> {
-        return ["state" as NSObject]
+    @objc class var keyPathsForValuesAffectingIsFinished: Set<String> {
+        return ["state"]
     }
 
-    @objc class func keyPathsForValuesAffectingIsCancelled() -> Set<NSObject> {
-        return ["cancelledState" as NSObject]
+    @objc class var keyPathsForValuesAffectingIsCancelled: Set<String> {
+        return ["cancelledState"]
     }
 
     override public init() {
