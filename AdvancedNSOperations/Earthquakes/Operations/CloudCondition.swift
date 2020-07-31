@@ -83,7 +83,7 @@ private class CloudKitPermissionOperation: CustomOperation {
     
     override func execute() {
         container.verifyPermission(permission, requestingIfNecessary: true) { error in
-            self.finishWithError(error)
+            self.finish(with: error)
         }
     }
     

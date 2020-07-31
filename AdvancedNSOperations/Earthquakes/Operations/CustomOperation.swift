@@ -288,7 +288,7 @@ class CustomOperation: Operation {
         for how an error from an `NSURLSession` is passed along via the
         `finishWithError()` method.
     */
-    final func finishWithError(_ error: NSError?) {
+    final func finish(with error: NSError?) {
         if let error = error {
             finish([error])
         } else {

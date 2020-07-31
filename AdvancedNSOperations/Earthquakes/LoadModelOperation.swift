@@ -74,7 +74,7 @@ class LoadModelOperation: CustomOperation {
             error = nil
         }
         
-        finishWithError(error)
+        finish(with: error)
     }
     
     fileprivate func createStore(_ persistentStoreCoordinator: NSPersistentStoreCoordinator, atURL URL: Foundation.URL?, type: String = NSSQLiteStoreType) -> NSError? {

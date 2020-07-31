@@ -112,7 +112,7 @@ class ParseEarthquakesOperation: CustomOperation {
             }
         }
         catch let jsonError as NSError {
-            finishWithError(jsonError)
+            finish(with: jsonError)
         }
     }
     
@@ -125,7 +125,7 @@ class ParseEarthquakesOperation: CustomOperation {
             }
             
             let error = self.saveContext()
-            self.finishWithError(error)
+            self.finish(with: error)
         }
     }
     
