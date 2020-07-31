@@ -17,17 +17,21 @@ import Foundation
 class CustomOperation: Operation {
     
     // use the KVO mechanism to indicate that changes to "state" affect other properties as well
-    @objc class func keyPathsForValuesAffectingIsReady() -> Set<String> {
+    @objc class var keyPathsForValuesAffectingIsReady: Set<String> {
         return ["state"]
     }
     
-    @objc class func keyPathsForValuesAffectingIsExecuting() -> Set<String> {
+    @objc class var keyPathsForValuesAffectingIsExecuting: Set<String> {
         return ["state"]
     }
     
     
-    @objc class func keyPathsForValuesAffectingIsFinished() -> Set<String> {
+    @objc class var keyPathsForValuesAffectingIsFinished: Set<String> {
         return ["state"]
+    }
+    
+    @objc class var keyPathsForValuesAffectingIsCancelled: Set<String> {
+        return ["cancelledState"]
     }
     
     // MARK: State Management
