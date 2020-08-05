@@ -23,8 +23,8 @@ import Foundation
 */
 class GroupOperation: CustomOperation {
     fileprivate let internalQueue = CustomOperationQueue()
-    fileprivate let startingOperation = BlockOperation(block: {})
-    fileprivate let finishingOperation = BlockOperation(block: {})
+    fileprivate let startingOperation = BlockOperation {}
+    fileprivate let finishingOperation = BlockOperation {}
 
     fileprivate var aggregatedErrors = [NSError]()
     
