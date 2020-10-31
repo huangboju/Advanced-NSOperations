@@ -15,7 +15,7 @@ import Foundation
     app, regardless of the `OperationQueue` on which an `Operation` was executed.
 */
 class ExclusivityController {
-    static let sharedExclusivityController = ExclusivityController()
+    static let shared = ExclusivityController()
 
     fileprivate let serialQueue = DispatchQueue(label: "Operations.ExclusivityController", attributes: [])
     fileprivate var operations: [String: [Operation]] = [:]

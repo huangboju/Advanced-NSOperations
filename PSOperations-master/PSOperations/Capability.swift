@@ -65,12 +65,12 @@ public struct Capability<C: CapabilityType>: OperationCondition {
         self.shouldRequest = requestIfNecessary
     }
 
-    public func dependencyForOperation(_ operation: Operation) -> Foundation.Operation? {
+    public func dependency(for operation: Operation) -> Foundation.Operation? {
         guard shouldRequest == true else { return nil }
         return AuthorizeCapability(capability: capability)
     }
 
-    public func evaluateForOperation(_ operation: Operation, completion: @escaping (OperationConditionResult) -> Void) {
+    public func evaluate(for operation: Operation, completion: @escaping (OperationConditionResult) -> Void) {
         DispatchQueue.main.async {
             self.capability.requestStatus { status in
                 if let error = CapabilityError<C>(status: status) {

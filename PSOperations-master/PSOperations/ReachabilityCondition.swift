@@ -32,11 +32,11 @@ public struct ReachabilityCondition: OperationCondition {
         self.host = host
     }
 
-    public func dependencyForOperation(_ operation: Operation) -> Foundation.Operation? {
+    public func dependency(for operation: Operation) -> Foundation.Operation? {
         return nil
     }
 
-    public func evaluateForOperation(_ operation: Operation, completion: @escaping (OperationConditionResult) -> Void) {
+    public func evaluate(for operation: Operation, completion: @escaping (OperationConditionResult) -> Void) {
         ReachabilityController.requestReachability(host) { reachable in
             if reachable {
                 completion(.satisfied)

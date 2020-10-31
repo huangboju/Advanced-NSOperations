@@ -53,7 +53,7 @@ open class OperationQueue: Foundation.OperationQueue {
 
             // Extract any dependencies needed by this operation.
             let dependencies = op.conditions.compactMap {
-                $0.dependencyForOperation(op)
+                $0.dependency(for: op)
             }
 
             for dependency in dependencies {
@@ -74,7 +74,7 @@ open class OperationQueue: Foundation.OperationQueue {
 
             if !concurrencyCategories.isEmpty {
                 // Set up the mutual exclusivity dependencies.
-                let exclusivityController = ExclusivityController.sharedExclusivityController
+                let exclusivityController = ExclusivityController.shared
 
                 exclusivityController.addOperation(op, categories: concurrencyCategories)
 

@@ -34,12 +34,12 @@ public struct NegatedCondition<T: OperationCondition>: OperationCondition {
         self.condition = condition
     }
 
-    public func dependencyForOperation(_ operation: Operation) -> Foundation.Operation? {
-        return condition.dependencyForOperation(operation)
+    public func dependency(for operation: Operation) -> Foundation.Operation? {
+        return condition.dependency(for: operation)
     }
 
-    public func evaluateForOperation(_ operation: Operation, completion: @escaping (OperationConditionResult) -> Void) {
-        condition.evaluateForOperation(operation) { result in
+    public func evaluate(for operation: Operation, completion: @escaping (OperationConditionResult) -> Void) {
+        condition.evaluate(for: operation) { result in
             switch result {
             case .failed(_):
                 // If the composed condition failed, then this one succeeded.
