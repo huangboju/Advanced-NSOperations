@@ -87,17 +87,17 @@ class EarthquakesTableViewController: UITableViewController {
         
         operation.addCondition(MutuallyExclusive<UIViewController>())
         
-        let blockObserver = BlockObserver { _, errors in
+        let blockObserver = BlockObserver(finishHandler:  { _, errors in
             /*
-                If the operation errored (ex: a condition failed) then the segue
-                isn't going to happen. We shouldn't leave the row selected.
-            */
+             If the operation errored (ex: a condition failed) then the segue
+             isn't going to happen. We shouldn't leave the row selected.
+             */
             if !errors.isEmpty {
                 DispatchQueue.main.async {
                     tableView.deselectRow(at: indexPath, animated: true)
                 }
             }
-        }
+        })
         
         operation.addObserver(blockObserver)
         
