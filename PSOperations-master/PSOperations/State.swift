@@ -37,7 +37,7 @@ internal enum State: Int, Comparable {
     /// The `Operation` has finished executing.
     case finished
 
-    func canTransitionToState(_ target: State, operationIsCancelled cancelled: Bool) -> Bool {
+    func canTransition(to target: State, operationIsCancelled cancelled: Bool) -> Bool {
         switch (self, target) {
         case (.initialized, .pending):
             return true

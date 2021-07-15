@@ -127,7 +127,7 @@ class CustomOperation: Operation {
             */
             willChangeValue(forKey: "state")
 
-            stateLock.withCriticalScope { () -> Void in
+            stateLock.withCriticalScope {
                 guard _state != .finished else {
                     return
                 }

@@ -100,7 +100,7 @@ open class Operation: Foundation.Operation {
             willChangeValue(forKey: "state")
             stateQueue.sync {
                 guard _state != .finished else { return }
-                assert(_state.canTransitionToState(newValue, operationIsCancelled: isCancelled), "Performing invalid state transition. from: \(_state) to: \(newValue)")
+                assert(_state.canTransition(to: newValue, operationIsCancelled: isCancelled), "Performing invalid state transition. from: \(_state) to: \(newValue)")
                 _state = newValue
             }
             didChangeValue(forKey: "state")
